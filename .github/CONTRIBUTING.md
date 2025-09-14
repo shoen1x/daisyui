@@ -6,7 +6,7 @@ daisyUI welcomes contributions from anyone willing to help 🤝
 
 - Before opening a new issue, first [search for existing issues](https://github.com/saadeghi/daisyui/issues?q=) to avoid duplications.
 - Provide detailed reports to make things easier for maintainers.
-- If there's a weird bug, please provide a reproduction repository on Github (or a [CodePen page](https://daisyui.com/codepen/) or [Tailwind Play](https://daisyui.com/tailwindplay/) page)
+- If there's a weird bug, please provide a reproduction repository on GitHub (or a [CodePen page](https://daisyui.com/codepen/) or [Tailwind Play](https://daisyui.com/tailwindplay/) page)
 
 ## Fixing existing issues
 
@@ -27,118 +27,254 @@ daisyUI welcomes contributions from anyone willing to help 🤝
 - Fixing typos doesn't need to be an issue. You can just open a pull request.
 - Fixing a mistake in document website doesn't need to be an issue. You can just open a pull request.
 
+## Contribute translations
+
+- You can help add or fix translations by using the [Fink localization editor](https://fink.inlang.com/github.com/saadeghi/daisyui?ref=badge)
+- Submit the translation by opening a pull request ([see guide](https://inlang.com/g/6ddyhpoi/guide-nilsjacobsen-contributeTranslationsWithFink))
+
 ## Building on local
 
 ### To build the daisyUI node package on local:
 
-1. [[Fork](https://github.com/saadeghi/daisyui/fork) and] clone the repo on local
-1. Install package dependencies:
-   ```
-   npm install
-   ```
-1. Build the package:
-   ```
-   npm run build
-   ```
-1. Now you can import daisyUI to your `tailwind.config.js`:
-   ```js
-   module.exports = {
-     plugins: [require("/path/to/src/directory")],
-   }
-   ```
-
-> [!NOTE]
-> If you are on Windows, you have to use a Unix shell like [Git Bash](https://gitforwindows.org/). Unfortunately, the Windows command prompt and PowerShell do not support the `cat` command, which is used in the build script.
+1. [[Fork](https://github.com/saadeghi/daisyui/fork) and] clone the repo on local – only fork the master branch
+2. [Install Bun](https://bun.sh/) if you don't have it:
+3. Install dependencies:
+  ```
+  bun install
+  ```
+4. Build daisyUI package:
+  ```
+  bun run build
+  ```
+5. Now you can use your local build of daisyUI in another local project by installing it as a dependency using Bun (or NPM, etc):  
+  In your own local project where you want to use daisyUI:
+  ```
+  bun install /path/to/daisyui/packages/daisyui
+  ```
 
 ### To run the [documentation site](https://daisyui.com/) on local:
 
-1. [[Fork](https://github.com/saadeghi/daisyui/fork) and] clone the repo on local
-1. Install all dependencies and build the package and documentation site using this command:
-   ```
-   npm run init
-   ```
-1. Run the document site:
-   ```
-   npm run dev
-   ```
-
-## Adding a new component
-
-Before adding a new component, please make sure it's [start a discussion about it on Github](https://github.com/saadeghi/daisyui/discussions) so we can talk about how the structure and style should be.  
-There is a `List of components` at the end of [/README.md](https://github.com/saadeghi/daisyui/blob/master/README.md) that I think would be a good to complete.
+1. [[Fork](https://github.com/saadeghi/daisyui/fork) and] clone the repo on local – only fork the master branch
+2. [Install Bun](https://bun.sh/) if you don't have it:
+3. Install dependencies:
+  ```
+  bun install
+  ```
+4. Build daisyUI package:
+  ```
+  bun run build
+  ```
+5. Run the document site:
+  ```
+  bun run dev
+  ```
 
 ### File structure
 
-All component styles are in [`/src`](https://github.com/saadeghi/daisyui/tree/master/src) but it's important to separate the style to 4 files:
-
-- `/src/components/unstyled`: Styles that define the layout and placement of a component  
-  (for example: [layout of `tab` and `tabs`](https://github.com/saadeghi/daisyui/blob/master/src/components/unstyled/tab.css))
-- `/src/components/styled`: Styles that define the visual appearance of a component  
-  (for example: [colors and spacing of `alert`](https://github.com/saadeghi/daisyui/blob/master/src/components/styled/alert.css))
-- `/src/utilities/unstyled`: Styles that define the layout and placement of a variant of a component that must be responsive  
-  (for example: [sizes of a `.btn`](https://github.com/saadeghi/daisyui/blob/master/src/utilities/unstyled/button.css))
-- `/src/utilities/styled`: Styles that define the visual appearance of a variant of a component that must be responsive  
-  (for example: [colors of `alert`](https://github.com/saadeghi/daisyui/blob/master/src/utilities/styled/alert.css))
-
-> Separating styles to these 4 files, allows us to use daisyUI components with/without _design decision_ styles ([See `styled` config](styled)) and allows us to define some styles as responsive utilities (to work with `lg:`, `md:`, `sm:`, etc... prefixes)
-
-### Code samples with dynamic prefix
-
-If your component documentation page contains `pre` blocks for code samples, be sure to follow the example below so that the code will be displayed with the correct prefix dynamically set by user:
-
-```svelte
-<Component title="Buttons with brand colors">
-  <button class="btn">Button</button>
-  <button class="btn btn-primary">Primary</button>
-  <button class="btn btn-secondary">Secondary</button>
-  <button class="btn btn-accent">Accent</button>
-  <button class="btn btn-ghost">Ghost</button>
-  <button class="btn btn-link">Link</button>
-
-  <!-- add $$ to each daisyUI class name in pre block-->
-  <pre slot="html" use:replace={{ to: $prefix }}>{`<button class="$$btn">Button</button>
-<button class="$$btn $$btn-primary">Button</button>
-<button class="$$btn $$btn-secondary">Button</button>
-<button class="$$btn $$btn-accent">Button</button>
-<button class="$$btn $$btn-ghost">Button</button>
-<button class="$$btn $$btn-link">Button</button>`}</pre>
-</Component>
+```js
+packages
+├── daisyui //daisyUI package
+│   ├── index.js //entry point
+│   ├── functions
+│   ├── src
+│   │   ├── base
+│   │   ├── components
+│   │   ├── themes
+│   │   ╰── utilities
+│   ╰── // generated files
+├── docs //documentation site
+│   ╰── src
+│       ├── routes
+│       │   ╰── (routes)
+│       │       ├── blog
+│       │       ├── components //component docs
+│       │       ├── docs //docs
+│       │       ╰── ...
+│       ╰── translations
+╰── playground //playground site
+    ╰── src
+        ╰── components
+            ╰── Component.astro // Where you can test things without committing
 ```
 
-### An example
+### packages/daisyui workflow
 
-Let's say we want to add a new component named `.coolbutton` (don't add that actually 😅 )
+```mermaid
+---
+title: daisyUI build flow
+---
+graph TD
 
-1. Add these files:
-   ```
-   /src/components/unstyled/coolbutton.css
-   /src/components/styled/coolbutton.css
-   ```
-1. Add your CSS there (you can use `@apply`)
-   - `/unstyled/coolbutton.css` is for the structure of the component without any design decision
-   - `/styled/coolbutton.css` is for the visual appearance of the component with colors, spacing, etc.
-1. Add a page to documentation site:
-   ```
-   /src/docs/src/routes/components/coolbutton/+page.svelte.md
-   ```
-1. Add page info and some HTML to your [Svelte](https://svelte.dev/) markdown ([mdsvex](https://mdsvex.pngwn.io/)) file that uses your class name
+    subgraph Build["src/"]
+        E[Themes]
+        F[base]
+        G[components]
+        H[utilities]
+    end
 
-   ```mdx
-   ---
-   title: Coolbutton
-   desc: It's a button but it's cool!
-   published: true
-   layout: components
-   ---
+    Build
 
-   <button class="coolbutton">Cool!</button>
-   ```
 
-1. Build the documentation site:
-   ```
-   npm run dev
-   ```
-1. Now when you open the site on localhost, you can see your new page, showing the new component with your style:
-   ```
-   http://localhost:3000/components/coolbutton
-   ```
+    Build
+
+
+
+    subgraph FinalPackage["components/"]
+
+        E
+        E
+        E
+        F
+        F
+        F
+        G
+        J12[components/*.css]
+        G
+        J13[components/*/index.js]
+        G
+        J14[components/*/object.js]
+        G
+        J15["*/class.json"]
+        H
+        H
+        H
+    end
+
+    FinalPackage
+	J13
+	J12
+	J12
+	subgraph s1["CSS"]
+		J2["daisyui.css - CDN"]
+		J3["themes.css"]
+		J4["chunks.css"]
+	end
+	J4
+	J12 --- J4
+	J4
+	J4
+	J4
+	J3
+	J12["*.css"] --- J2
+	J2
+	J2
+	J2
+	J2
+	J2
+	subgraph s2["@plugin "daisyui""]
+		J19["import.js"]
+		J1["index.js - Plugin"]
+	end
+	J1
+	J19
+	J19
+	J19
+	J13 --- J19
+	J19 --- J1["index.js"]
+	subgraph s3["utilities/"]
+		J16["utilities/*.css"]
+		J17["utilities/*/index.js"]
+		J18["utilities/*/object.js"]
+	end
+	H
+	J18["*/object.js"]
+	J17 --- J19
+	H
+	J17["*/index.js"]
+	J16 --- J2
+	J16 --- J4
+	H
+	J16["*.css"]
+	subgraph s4["base/"]
+		J11["base/*/object.js"]
+		J9["base/*.css"]
+		J10["base/*/index.js"]
+	end
+	subgraph s5["colors/"]
+		J5["colors/*.css"]
+	end
+	subgraph s6["themes/"]
+		J6["theme/*.css"]
+		J8["theme/*/object.js"]
+		J7["theme/*/index.js"]
+	end
+	J10 --- J19
+	F
+	J10
+	J9 --- J2
+	J9 --- J4
+	F
+	J9["*.css"]
+	F
+	J11
+	J7 --- J19["imports.js"]
+	E
+	J7
+	E
+	J8
+	J6 --- J2
+	J6 --- J3
+	J6 --- J4
+	E["themes"]
+	J6["*.css"]
+	J5 --- J2["daisyui.css"]
+	J5 --- J4
+	J5
+	J8["*/object.js"] --- J7["*/index.js"]
+	J14["*/object.js"] --- J13["*/index.js"]
+	J11["*/object.js"] --- J10["*/index.js"]
+	J5
+	J18 --- J17
+	subgraph s7["build"]
+		n3@{ label: "Rectangle" }
+	end
+	Build
+	J5
+	s7
+	s5
+	subgraph s8["functions/"]
+		n10["...other build functions"]
+		D["functions/variables.css"]
+		n8["variables.js"]
+		n7["themeOrder.js"]
+		n6["pluginOptionsHandler.js"]
+		n5["plugin.js"]
+		n4["addPrefix.js"]
+		n1["themePlugin.js"]
+	end
+	n1
+	H["utilities/*.css"] --- s3
+	G["components/*.css"] --- FinalPackage
+	F["base/*.css"] --- s4
+	E["themes/*.css"] --- s6
+	n3@{ shape: "flip-tri", label: "build.js" } --- Build
+	n4 --- J1
+	n8 --- J1
+	n5 --- J1
+	n6 --- J1
+	n7 --- n6
+	subgraph s9["@plugin "daisyui/theme""]
+		n2["theme/index.js"]
+		n9["/object.js"]
+	end
+	n1 --- n2["/index.js"]
+	J8 --- n9
+	D["variables.css"] --> J5["*.css"]
+	style J1 fill:#FFDE59,color:#000000
+	style n2 color:#000000,fill:#FFDE59
+	n5 --- n1
+	n9 --- n1
+	n4
+	J7
+	n4 --- J17
+	n4 --- J10
+	n4 --- J13
+	style J12 fill:#5E17EB,color:#FFFFFF
+	style J16 fill:#5E17EB,color:#FFFFFF
+	style J9 fill:#5E17EB,color:#FFFFFF
+	style J5 fill:#5E17EB,color:#FFFFFF
+	style J6 fill:#5E17EB,color:#FFFFFF
+	style J3 fill:#5E17EB,color:#FFFFFF
+	style J2 fill:#5E17EB,color:#FFFFFF
+	style J4 fill:#5E17EB,color:#FFFFFF
+```
